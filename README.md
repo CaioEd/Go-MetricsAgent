@@ -6,6 +6,13 @@ The **Pulse Agent** is designed to run as a background service on host machines.
 
 ---
 
+## 🔗 Project Ecosystem
+This repository contains the **Monitoring Agent**. To see the full project in action, check out the other components:
+
+* **Backend API:** [System Pulse (Spring Boot)](https://github.com/CaioEd/system-pulse) - Manages states, connections and CRUD of servers.
+* **Frontend Dashboard:** [ServersHealth-Next](https://github.com/CaioEd/ServersHealth-Next) (Next.js) - Frontend dashboard to visualize the data in real-time.
+---
+
 ## 🚀 Features
 
 * **Low Footprint:** Built with Go for minimal CPU and RAM overhead.
@@ -42,3 +49,14 @@ Following a clean and modular architecture:
 │       └── client.go
 ├── go.mod
 └── .gitignore
+
+```
+
+---
+
+## How to run
+
+```bash
+1. Download dependencies:  go mod tidy
+2. Run the agent:          go run main.go
+```
