@@ -16,16 +16,17 @@ type Config struct {
 func Start(cfg Config) {
 	ticker := time.NewTicker(cfg.Interval)
 	defer ticker.Stop()
+	hostInfoSent := false
 
 	log.Printf("Iniciando monitoramento. Envio a cada %v para %s", cfg.Interval, cfg.ApiUrl)
 
 	// Loop infinito controlado pelo Ticker
 	for range ticker.C {
-		collectAndSend(cfg)
+		collectAndSend(cfg, &hostInfoSent)
 	}
 }
 
-func collectAndSend(cfg Config) {
+func collectAndSend(cfg Config, hostInfoSent *bool) {
 	// 1. Coleta (sequencial ou goroutines se fosse crítico, aqui sequencial basta)
 	cpuUse, err := metrics.GetCpuUsage()
 	if err != nil {
@@ -47,10 +48,22 @@ func collectAndSend(cfg Config) {
 
 	// 2. Monta o Payload
 	payload := sender.Payload{
-		Token:     cfg.Token,
-		UsageCPU:  cpuUse,
-		UsageMemory:  ramUse,
-		UsageDisk: diskUse,
+		Token:       cfg.Token,
+		UsageCPU:    cpuUse,
+		UsageMemory: ramUse,
+		UsageDisk:   diskUse,
+	}
+
+	if !*hostInfoSent {
+		osName, kernelVersion, err := metrics.GetOperatingSystemAndKernel()
+		if err != nil {
+			log.Printf("Erro ao ler sistema operacional e kernel: %v", err)
+			return
+		}
+
+		payload.OperatingSystem = osName
+		payload.KernelVersion = kernelVersion
+		*hostInfoSent = true
 	}
 
 	// 3. Envia

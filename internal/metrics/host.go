@@ -2,12 +2,22 @@ package metrics
 
 import "github.com/shirou/gopsutil/v3/host"
 
-func GetOperationSystem() (string, error) {
+func GetOperatingSystemAndKernel() (string, string, error) {
 	h, err := host.Info()
+	if err != nil {
+		return "", "", err
+	}
+
+	return h.OS, h.KernelVersion, nil
+}
+
+func GetOperationSystem() (string, error) {
+	osName, _, err := GetOperatingSystemAndKernel()
 	if err != nil {
 		return "", err
 	}
-	return h.OS, nil
+
+	return osName, nil
 }
 
 func GetHostName() (string, error) {
@@ -19,9 +29,10 @@ func GetHostName() (string, error) {
 }
 
 func GetKernelVersion() (string, error) {
-	h, err := host.Info()
+	_, kernel, err := GetOperatingSystemAndKernel()
 	if err != nil {
 		return "", err
 	}
-	return h.KernelVersion, nil
+
+	return kernel, nil
 }
