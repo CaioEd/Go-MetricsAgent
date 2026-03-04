@@ -1,0 +1,7 @@
+FROM golang:1.22-alpine
+
+RUN apk add --no-cache bash curl procps stress-ng
+
+WORKDIR /workspace
+
+CMD ["tail", "-f", "/dev/null"]
