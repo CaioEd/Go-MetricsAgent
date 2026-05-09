@@ -1,0 +1,16 @@
+services:
+  simulated-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.simulated-server
+    container_name: metrics-agent-simulated-server
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    stdin_open: true
+    tty: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      API_URL: "http://host.docker.internal:8080/metrics"
+      AGENT_TOKEN: "replace-with-your-agent-token"

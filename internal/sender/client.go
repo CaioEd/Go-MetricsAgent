@@ -1,17 +1,19 @@
 package sender
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
-	"encoding/json"
-	"bytes"
-	"fmt"
 )
 
 type Payload struct {
-	UsageCPU float64 `json:"usageCpu"`
-	UsageMemory float64 `json:"usageRam"`
-	UsageDisk float64 `json:"usageDisk"`
+	UsageCPU        float64 `json:"usageCpu"`
+	UsageMemory     float64 `json:"usageRam"`
+	UsageDisk       float64 `json:"usageDisk"`
+	OperatingSystem string  `json:"operatingSystem,omitempty"`
+	KernelVersion   string  `json:"kernelVersion,omitempty"`
 }
 
 func SendMetrics(apiUrl string, token string, data Payload) error {
