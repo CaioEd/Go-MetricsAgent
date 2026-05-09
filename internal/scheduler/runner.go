@@ -47,7 +47,6 @@ func collectAndSend(cfg Config) {
 
 	// 2. Monta o Payload
 	payload := sender.Payload{
-		Token:     cfg.Token,
 		UsageCPU:  cpuUse,
 		UsageMemory:  ramUse,
 		UsageDisk: diskUse,
@@ -55,7 +54,7 @@ func collectAndSend(cfg Config) {
 
 	// 3. Envia
 	log.Printf("Enviando métricas: CPU: %.2f%%, RAM: %.2f%%, DISK: %.2f%%", cpuUse, ramUse, diskUse)
-	if err := sender.SendMetrics(cfg.ApiUrl, payload); err != nil {
+	if err := sender.SendMetrics(cfg.ApiUrl, cfg.Token, payload); err != nil {
 		log.Printf("Falha ao enviar dados para API: %v", err)
 	} else {
 		log.Println("Dados enviados com sucesso!")

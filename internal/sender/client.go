@@ -9,13 +9,12 @@ import (
 )
 
 type Payload struct {
-	Token string `json:"token"`
 	UsageCPU float64 `json:"usageCpu"`
 	UsageMemory float64 `json:"usageRam"`
 	UsageDisk float64 `json:"usageDisk"`
 }
 
-func SendMetrics(apiUrl string, data Payload) error {
+func SendMetrics(apiUrl string, token string, data Payload) error {
 	jsonData, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -23,8 +22,12 @@ func SendMetrics(apiUrl string, data Payload) error {
 
 	client := &http.Client{Timeout: 10 * time.Second}
 	req, err := http.NewRequest("POST", apiUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
 
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Agent-Token", token)
 
 	resp, err := client.Do(req)
 	if err != nil {
